@@ -10,9 +10,10 @@ namespace Shadee.Dialogues.Editor
     public class DialogueEditor : EditorWindow
     {
         protected Dialogue selectedDialogue = null;
-        protected GUIStyle nodeStyle;
-        protected DialogueNode draggingNode = null;
-        protected Vector2 draggingOffset;
+        [NonSerialized] protected GUIStyle nodeStyle;
+        [NonSerialized] protected DialogueNode draggingNode = null;
+        [NonSerialized] protected Vector2 draggingOffset;
+        [NonSerialized] protected DialogueNode creatingNode = null;
 
         [MenuItem("Window/Dialogue Editor")]
         public static void ShowEditorWindow()
@@ -70,6 +71,13 @@ namespace Shadee.Dialogues.Editor
                 {
                     DrawNode(node);
                 }
+
+                if(creatingNode != null)
+                {
+                    Undo.RecordObject(selectedDialogue, "Added Dialogue Node");
+                    selectedDialogue.CreateNode(creatingNode);
+                    creatingNode = null;
+                }
             }
 
         }
@@ -102,16 +110,18 @@ namespace Shadee.Dialogues.Editor
             GUILayout.BeginArea(node.rect, nodeStyle);
             EditorGUI.BeginChangeCheck();
 
-            EditorGUILayout.LabelField("Node: ", EditorStyles.whiteBoldLabel);
             string newText = EditorGUILayout.TextField(node.text);
-            string newUniqueID = EditorGUILayout.TextField(node.uniqueID);
 
             if (EditorGUI.EndChangeCheck())
             {
                 Undo.RecordObject(selectedDialogue, "Updated Dialogue Text");
 
                 node.text = newText;
-                node.uniqueID = newUniqueID;
+            }
+
+            if(GUILayout.Button("+"))
+            {
+                creatingNode = node;
             }
 
             GUILayout.EndArea();
