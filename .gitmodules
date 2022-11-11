@@ -1,0 +1,3 @@
+[submodule "Assets/Packages/ProtagonistController"]
+	path = Assets/Packages/ProtagonistController
+	url = https://github.com/1157030004/protagonist-controller
