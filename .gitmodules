@@ -4,3 +4,6 @@
 [submodule "Assets/Packages/NPC AI"]
 	path = Assets/Packages/NPC AI
 	url = https://github.com/1157030004/NPC-AI
+[submodule "Assets/Packages/Dialogue Editor"]
+	path = Assets/Packages/Dialogue Editor
+	url = https://github.com/1157030004/Dialogue-Editor
