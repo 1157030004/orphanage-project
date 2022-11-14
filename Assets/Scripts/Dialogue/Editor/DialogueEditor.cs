@@ -11,6 +11,7 @@ namespace Shadee.Dialogues.Editor
     {
         protected Dialogue selectedDialogue = null;
         [NonSerialized] protected GUIStyle nodeStyle;
+        [NonSerialized] protected GUIStyle playerNodeStyle;
         [NonSerialized] protected DialogueNode draggingNode = null;
         [NonSerialized] protected Vector2 draggingOffset;
         [NonSerialized] protected DialogueNode creatingNode = null;
@@ -47,10 +48,16 @@ namespace Shadee.Dialogues.Editor
             Selection.selectionChanged += OnSelectionChanged;
 
             nodeStyle = new GUIStyle();
-            nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node5.png") as Texture2D;
+            nodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node0.png") as Texture2D;
             nodeStyle.normal.textColor = Color.white;
             nodeStyle.padding = new RectOffset(20, 20, 20, 20);
             nodeStyle.border = new RectOffset(12, 12, 12, 12);    
+        
+            playerNodeStyle = new GUIStyle();
+            playerNodeStyle.normal.background = EditorGUIUtility.Load("builtin skins/darkskin/images/node5.png") as Texture2D;
+            playerNodeStyle.normal.textColor = Color.white;
+            playerNodeStyle.padding = new RectOffset(20, 20, 20, 20);
+            playerNodeStyle.border = new RectOffset(12, 12, 12, 12);    
         }
 
         private void OnSelectionChanged()
@@ -146,7 +153,12 @@ namespace Shadee.Dialogues.Editor
 
         private void DrawNode(DialogueNode node)
         {
-            GUILayout.BeginArea(node.GetRect(), nodeStyle);
+            GUIStyle style = nodeStyle;
+            if(node.IsPlayerSpeaking())
+            {
+                style = playerNodeStyle;
+            }
+            GUILayout.BeginArea(node.GetRect(), style);
 
             node.SetText(EditorGUILayout.TextField(node.GetText()));
 

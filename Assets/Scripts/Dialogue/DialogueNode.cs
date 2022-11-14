@@ -1,13 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
-using UndoANdDirty = Shadee.Dialogues.UndoAndDirty;
 
 namespace Shadee.Dialogues
 {
     public class DialogueNode : ScriptableObject
     {
+        [SerializeField] bool isPlayerSpeaking = false;
         [SerializeField] private string text;
         [SerializeField] private List<string> children = new List<string>();
         [SerializeField] private Rect rect = new Rect(0, 0, 200, 100);
@@ -27,6 +28,11 @@ namespace Shadee.Dialogues
             return children;
         }
 
+        public bool IsPlayerSpeaking()
+        {
+            return isPlayerSpeaking;
+        }
+
 #if UNITY_EDITOR
         public void SetPosition(Vector2 newPosition)
         {
@@ -39,22 +45,33 @@ namespace Shadee.Dialogues
         {
             if(newText != text)
             {
+                Undo.RecordObject(this, "Update Dialogue Text");
                 text = newText;
-                UndoAndDirty.Mark(this, "Update Dialogue Text");
+                EditorUtility.SetDirty(this);
             }
         }
 
         public void AddChild(string childID)
         {
+            Undo.RecordObject(this, "Add Dialogue Link");
             children.Add(childID);
-            UndoAndDirty.Mark(this, "Add Dialogue Link");
+            EditorUtility.SetDirty(this);
         }
 
         public void RemoveChild(string childID)
         {
+            Undo.RecordObject(this, "Remove Dialogue Link");
             children.Remove(childID);
-            UndoAndDirty.Mark(this, "Remove Dialogue Link");
+            EditorUtility.SetDirty(this);
         }
+
+        public void SetPlayerSpeaking(bool newIsPlayerSpeaking)
+        {
+            Undo.RecordObject(this, "Change Dialogue Speaker");
+            isPlayerSpeaking = newIsPlayerSpeaking;
+            EditorUtility.SetDirty(this);
+        }
+
 #endif
 
     }
