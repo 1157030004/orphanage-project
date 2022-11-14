@@ -14,11 +14,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nodes:
   - uniqueID: cbe4103c-6631-4b50-9faa-3349eac231db
+    text: Tampan
+    children:
+    - b1a4dbe7-dde3-48a5-90e6-5baea4c0b298
+    rect:
+      serializedVersion: 2
+      x: 184.00002
+      y: 82
+      width: 200
+      height: 100
+  - uniqueID: 26eb32f9-f9cc-4141-bd09-a3686730afa5
     text: 
     children: []
     rect:
       serializedVersion: 2
-      x: 0
-      y: 0
+      x: 134.99998
+      y: 266.99997
+      width: 200
+      height: 100
+  - uniqueID: b1a4dbe7-dde3-48a5-90e6-5baea4c0b298
+    text: 
+    children:
+    - db5617fa-d656-44c2-a24d-5607231813fd
+    rect:
+      serializedVersion: 2
+      x: 469
+      y: 132
+      width: 200
+      height: 100
+  - uniqueID: db5617fa-d656-44c2-a24d-5607231813fd
+    text: 
+    children: []
+    rect:
+      serializedVersion: 2
+      x: 660
+      y: 261
       width: 200
       height: 100

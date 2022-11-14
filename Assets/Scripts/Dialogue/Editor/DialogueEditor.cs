@@ -14,6 +14,7 @@ namespace Shadee.Dialogues.Editor
         [NonSerialized] protected DialogueNode draggingNode = null;
         [NonSerialized] protected Vector2 draggingOffset;
         [NonSerialized] protected DialogueNode creatingNode = null;
+        [NonSerialized] protected DialogueNode deletingNode = null;
 
         [MenuItem("Window/Dialogue Editor")]
         public static void ShowEditorWindow()
@@ -78,6 +79,13 @@ namespace Shadee.Dialogues.Editor
                     selectedDialogue.CreateNode(creatingNode);
                     creatingNode = null;
                 }
+
+                if(deletingNode != null)
+                {
+                    Undo.RecordObject(selectedDialogue, "Deleted Dialogue Node");
+                    selectedDialogue.DeleteNode(deletingNode);
+                    deletingNode = null;
+                }
             }
 
         }
@@ -119,10 +127,19 @@ namespace Shadee.Dialogues.Editor
                 node.text = newText;
             }
 
+            GUILayout.BeginHorizontal();
+
             if(GUILayout.Button("+"))
             {
                 creatingNode = node;
             }
+
+            if(GUILayout.Button("x"))
+            {
+                deletingNode = node;
+            }
+
+            GUILayout.EndHorizontal();
 
             GUILayout.EndArea();
         }
