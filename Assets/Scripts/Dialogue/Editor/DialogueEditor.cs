@@ -17,6 +17,8 @@ namespace Shadee.Dialogues.Editor
         [NonSerialized] protected DialogueNode deletingNode = null;
         [NonSerialized] protected DialogueNode linkingParentNode = null;
         Vector2 scrollPosition;
+        [NonSerialized] protected bool draggingCanvas = false;
+        [NonSerialized] protected Vector2 draggingCanvasOffset;
 
         [MenuItem("Window/Dialogue Editor")]
         public static void ShowEditorWindow()
@@ -109,6 +111,11 @@ namespace Shadee.Dialogues.Editor
                 {
                     draggingOffset = draggingNode.rect.position - Event.current.mousePosition;
                 }
+                else
+                {
+                    draggingCanvas = true;
+                    draggingOffset = Event.current.mousePosition + scrollPosition;
+                }
             }
             else if(Event.current.type == EventType.MouseDrag && draggingNode != null)
             {
@@ -116,9 +123,19 @@ namespace Shadee.Dialogues.Editor
                 draggingNode.rect.position = Event.current.mousePosition + draggingOffset;
                 GUI.changed = true;
             }
+            else if(Event.current.type == EventType.MouseDrag && draggingCanvas)
+            {
+                scrollPosition = draggingOffset - Event.current.mousePosition;
+                GUI.changed = true;
+            }
             else if(Event.current.type == EventType.MouseUp && draggingNode != null)
             {
                 draggingNode = null;
+
+            }
+            else if(Event.current.type == EventType.MouseUp && draggingCanvas)
+            {
+                draggingCanvas = false;
             }
         }
 
