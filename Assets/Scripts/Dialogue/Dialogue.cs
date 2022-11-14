@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Shadee.Dialogues
 {
     [CreateAssetMenu(fileName = "New Dialogue", menuName = "Dialogue")]
-    public class Dialogue : ScriptableObject
+    public class Dialogue : ScriptableObject, ISerializationCallbackReceiver
     {
         [SerializeField] private List<DialogueNode> nodes = new List<DialogueNode>();
         protected Dictionary<string, DialogueNode> nodeLookup = new Dictionary<string, DialogueNode>();
@@ -16,10 +16,7 @@ namespace Shadee.Dialogues
         private void Awake() 
         {
 #if UNITY_EDITOR
-            if(nodes.Count == 0)
-            {
-                CreateNode(null);
-            }
+
 #endif
 
             OnValidate();
@@ -63,6 +60,7 @@ namespace Shadee.Dialogues
                 parent.children.Add(newNode.name);
             }
             nodes.Add(newNode);
+            // AssetDatabase.AddObjectToAsset(newNode, this);
             OnValidate();
         }
     
@@ -80,6 +78,29 @@ namespace Shadee.Dialogues
             {
                 node.children.Remove(nodeToDelete.name);
             }
+        }
+
+        public void OnBeforeSerialize()
+        {
+            if(nodes.Count == 0)
+            {
+                CreateNode(null);
+            }
+            
+            if(AssetDatabase.GetAssetPath(this) != String.Empty)
+            {
+                foreach (DialogueNode node in GetAllNodes())
+                {
+                    if(AssetDatabase.GetAssetPath(node) == String.Empty)
+                    {
+                        AssetDatabase.AddObjectToAsset(node, this);
+                    }
+                }
+            }
+        }
+
+        public void OnAfterDeserialize()
+        {
         }
     }
 }
