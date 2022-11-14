@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UndoANdDirty = Shadee.Dialogues.UndoAndDirty;
 
 namespace Shadee.Dialogues
 {
@@ -31,27 +32,28 @@ namespace Shadee.Dialogues
         {
             Undo.RecordObject(this, "Move Dialogue Node");
             rect.position = newPosition;
+            EditorUtility.SetDirty(this);
         }
 
         public void SetText(string newText)
         {
             if(newText != text)
             {
-                Undo.RecordObject(this, "Update Dialogue Text");
                 text = newText;
+                UndoAndDirty.Mark(this, "Update Dialogue Text");
             }
         }
 
         public void AddChild(string childID)
         {
-            Undo.RecordObject(this, "Add Dialogue Link");
             children.Add(childID);
+            UndoAndDirty.Mark(this, "Add Dialogue Link");
         }
 
         public void RemoveChild(string childID)
         {
-            Undo.RecordObject(this, "Remove Dialogue Link");
             children.Remove(childID);
+            UndoAndDirty.Mark(this, "Remove Dialogue Link");
         }
 #endif
 

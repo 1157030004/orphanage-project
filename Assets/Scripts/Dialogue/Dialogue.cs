@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UndoANdDirty = Shadee.Dialogues.UndoAndDirty;
 
 namespace Shadee.Dialogues
 {
@@ -23,7 +24,8 @@ namespace Shadee.Dialogues
             nodeLookup.Clear();
             foreach (DialogueNode node in GetAllNodes())
             {
-                nodeLookup[node.name] = node;
+                if(node != null)
+                    nodeLookup[node.name] = node;
             }
         }
 
@@ -52,14 +54,14 @@ namespace Shadee.Dialogues
             DialogueNode newNode = MakeNode(parent);
             Undo.RegisterCreatedObjectUndo(newNode, "Created Dialogue Node");
 
-            Undo.RecordObject(this, "Added Dialogue Node");
             AddNode(newNode);
+            UndoAndDirty.Mark(this, "Added Dialogue Node");
         }
 
         public void DeleteNode(DialogueNode nodeToDelete)
         {
-            Undo.RecordObject(this, "Deleted Dialogue Node");
             nodes.Remove(nodeToDelete);
+            UndoAndDirty.Mark(this, "Deleted Dialogue Node");
             OnValidate();
             CleanDanglingChildren(nodeToDelete);
             Undo.DestroyObjectImmediate(nodeToDelete);
