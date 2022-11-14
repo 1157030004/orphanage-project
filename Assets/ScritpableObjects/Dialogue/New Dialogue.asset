@@ -13,42 +13,4 @@ MonoBehaviour:
   m_Name: New Dialogue
   m_EditorClassIdentifier: 
   nodes:
-  - uniqueID: 1
-    text: tampan banget
-    children:
-    - 2
-    rect:
-      serializedVersion: 2
-      x: 12.199997
-      y: 39.8
-      width: 200
-      height: 150
-  - uniqueID: 2
-    text: berani
-    children:
-    - 3
-    - 4
-    rect:
-      serializedVersion: 2
-      x: 291.19995
-      y: 105.8
-      width: 200
-      height: 200
-  - uniqueID: 3
-    text: iyaaa
-    children: []
-    rect:
-      serializedVersion: 2
-      x: 572.2
-      y: 59.800003
-      width: 200
-      height: 100
-  - uniqueID: 4
-    text: ga tauu
-    children: []
-    rect:
-      serializedVersion: 2
-      x: 585.2
-      y: 282.8
-      width: 200
-      height: 100
+  - {fileID: 0}

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Shadee.Dialogues
@@ -17,10 +18,7 @@ namespace Shadee.Dialogues
 #if UNITY_EDITOR
             if(nodes.Count == 0)
             {
-                DialogueNode rootNode = new DialogueNode();
-                rootNode.uniqueID = Guid.NewGuid().ToString();
-                nodes.Add(rootNode);
-
+                CreateNode(null);
             }
 #endif
 
@@ -32,7 +30,7 @@ namespace Shadee.Dialogues
             nodeLookup.Clear();
             foreach (DialogueNode node in GetAllNodes())
             {
-                nodeLookup[node.uniqueID] = node;
+                nodeLookup[node.name] = node;
             }
         }
 
@@ -57,9 +55,13 @@ namespace Shadee.Dialogues
 
         public void CreateNode(DialogueNode parent)
         {
-            DialogueNode newNode = new DialogueNode();
-            newNode.uniqueID = Guid.NewGuid().ToString();
-            parent.children.Add(newNode.uniqueID);
+            DialogueNode newNode = CreateInstance<DialogueNode>();
+            newNode.name = Guid.NewGuid().ToString();
+            Undo.RegisterCreatedObjectUndo(newNode, "Created Dialogue Node");
+            if(parent != null)
+            {
+                parent.children.Add(newNode.name);
+            }
             nodes.Add(newNode);
             OnValidate();
         }
@@ -69,13 +71,14 @@ namespace Shadee.Dialogues
             nodes.Remove(nodeToDelete);
             OnValidate();
             CleanDanglingChildren(nodeToDelete);
+            Undo.DestroyObjectImmediate(nodeToDelete);
         }
 
         private void CleanDanglingChildren(DialogueNode nodeToDelete)
         {
             foreach (DialogueNode node in GetAllNodes())
             {
-                node.children.Remove(nodeToDelete.uniqueID);
+                node.children.Remove(nodeToDelete.name);
             }
         }
     }
