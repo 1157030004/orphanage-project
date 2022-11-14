@@ -15,6 +15,7 @@ namespace Shadee.Dialogues.Editor
         [NonSerialized] protected Vector2 draggingOffset;
         [NonSerialized] protected DialogueNode creatingNode = null;
         [NonSerialized] protected DialogueNode deletingNode = null;
+        [NonSerialized] protected DialogueNode linkingParentNode = null;
 
         [MenuItem("Window/Dialogue Editor")]
         public static void ShowEditorWindow()
@@ -129,12 +130,14 @@ namespace Shadee.Dialogues.Editor
 
             GUILayout.BeginHorizontal();
 
-            if(GUILayout.Button("+"))
+            if (GUILayout.Button("+"))
             {
                 creatingNode = node;
             }
 
-            if(GUILayout.Button("x"))
+            DrawLinkButtons(node);
+
+            if (GUILayout.Button("x"))
             {
                 deletingNode = node;
             }
@@ -142,6 +145,42 @@ namespace Shadee.Dialogues.Editor
             GUILayout.EndHorizontal();
 
             GUILayout.EndArea();
+        }
+
+        private void DrawLinkButtons(DialogueNode node)
+        {
+            if (linkingParentNode == null)
+            {
+                if (GUILayout.Button("link"))
+                {
+                    linkingParentNode = node;
+                }
+            }
+            else if(linkingParentNode == node)
+            {
+                if(GUILayout.Button("cancel"))
+                {
+                    linkingParentNode = null;
+                }
+            }
+            else if (linkingParentNode.children.Contains(node.uniqueID))
+            {
+                if(GUILayout.Button("unlink"))
+                {
+                    Undo.RecordObject(selectedDialogue, "Remove Dialogue Link");
+                    linkingParentNode.children.Remove(node.uniqueID);
+                    linkingParentNode = null;
+                }
+            }
+            else
+            {
+                if (GUILayout.Button("child"))
+                {
+                    Undo.RecordObject(selectedDialogue, "Added Dialogue Link");
+                    linkingParentNode.children.Add(node.uniqueID);
+                    linkingParentNode = null;
+                }
+            }
         }
 
         private void DrawConnections(DialogueNode node)
