@@ -16,6 +16,7 @@ namespace Shadee.Dialogues.Editor
         [NonSerialized] protected DialogueNode creatingNode = null;
         [NonSerialized] protected DialogueNode deletingNode = null;
         [NonSerialized] protected DialogueNode linkingParentNode = null;
+        Vector2 scrollPosition;
 
         [MenuItem("Window/Dialogue Editor")]
         public static void ShowEditorWindow()
@@ -65,6 +66,11 @@ namespace Shadee.Dialogues.Editor
             else
             {
                 ProcessEvents();
+
+                scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
+
+                GUILayoutUtility.GetRect(4000, 4000);
+
                 foreach (DialogueNode node in selectedDialogue.GetAllNodes())
                 {
                     DrawConnections(node);
@@ -73,6 +79,8 @@ namespace Shadee.Dialogues.Editor
                 {
                     DrawNode(node);
                 }
+
+                EditorGUILayout.EndScrollView();
 
                 if(creatingNode != null)
                 {
@@ -96,7 +104,7 @@ namespace Shadee.Dialogues.Editor
         {
             if(Event.current.type == EventType.MouseDown && draggingNode == null)
             {
-                draggingNode = GetNodeAtPoint(Event.current.mousePosition);
+                draggingNode = GetNodeAtPoint(Event.current.mousePosition + scrollPosition);
                 if(draggingNode != null)
                 {
                     draggingOffset = draggingNode.rect.position - Event.current.mousePosition;
