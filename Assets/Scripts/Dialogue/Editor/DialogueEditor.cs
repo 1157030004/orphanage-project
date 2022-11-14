@@ -20,6 +20,10 @@ namespace Shadee.Dialogues.Editor
         [NonSerialized] protected bool draggingCanvas = false;
         [NonSerialized] protected Vector2 draggingCanvasOffset;
 
+        protected Vector2 canvasSize = new Vector2(4000, 4000);
+        protected Vector2 backgroundSize = new Vector2(50, 50);
+
+
         [MenuItem("Window/Dialogue Editor")]
         public static void ShowEditorWindow()
         {
@@ -71,7 +75,10 @@ namespace Shadee.Dialogues.Editor
 
                 scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
-                GUILayoutUtility.GetRect(4000, 4000);
+                Rect canvas = GUILayoutUtility.GetRect(canvasSize.x, canvasSize.y);
+                Texture2D backgroundTex = Resources.Load("background") as Texture2D;
+                Rect texCoords = new Rect(0, 0, canvasSize.x / backgroundSize.x, canvasSize.y / backgroundSize.y);
+                GUI.DrawTextureWithTexCoords(canvas, backgroundTex, texCoords);
 
                 foreach (DialogueNode node in selectedDialogue.GetAllNodes())
                 {
@@ -100,7 +107,6 @@ namespace Shadee.Dialogues.Editor
             }
 
         }
-
 
         private void ProcessEvents()
         {
